@@ -21,7 +21,7 @@
         </li>
       </ul>
     </div>
-    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+    <ul v-if="!$store.state.user.is_login" class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
           <router-link :to="{name:'register'}" class="nav-link">注册</router-link>
         </li>
@@ -29,13 +29,39 @@
           <router-link :to="{name:'login'}" class="nav-link">登录</router-link>
         </li>
     </ul>
+    <ul v-else class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <router-link :to="{name:'userinfo'}" class="nav-link">{{ $store.state.user.username }}</router-link>
+        </li>
+        <!-- <li class="nav-item">
+          <router-link :to="{name: 'userinfo'}" @click="logout" class="nav-link">退出登录</router-link>
+        </li> -->
+        <li class="nav-item">
+          <a @click="logout" class="nav-link" aria-current="page" href="#">注销</a>
+        </li>
+    </ul>
   </div>
 </nav>
 </template>
 
 <script>
+import { useStore } from 'vuex';
 export default {
     name: 'NavBarView',
+    setup() {
+      const store = useStore();
+      // 这里的属性要进行动态变化或者直接在上面读取store中的数据
+      // username.value = store.state.user.username;
+      // is_login.value = store.state.user.is_login;
+
+      const logout = () => {
+        store.dispatch("logout");
+      }
+
+      return {
+        logout
+      }
+    }
 }
 </script>
 

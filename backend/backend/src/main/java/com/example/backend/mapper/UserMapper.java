@@ -19,9 +19,9 @@ public class UserMapper {
     private JdbcTemplate jdbcTemplate;
 
     // 添加一个用户
-    public String adduser() {
-        String sql = "insert into user(4, 'dawd', 'pdawd', '25', null)";
-        jdbcTemplate.update(sql);
+    public String adduser(String username, String password, String permision, String info) {
+        String sql = "INSERT INTO user (username, password, permission, user_info) VALUES (?, ?, ?, ?)";
+        jdbcTemplate.update(sql, new Object[]{username, password, permision, info});
         return "add user success!";
     }
 
@@ -49,10 +49,29 @@ public class UserMapper {
     }
 
     // 查询某一特定用户
-    public User getUser(int userId) {
+    public User get_id_User(int userId) {
         String sql = "select * from user where id = ?";
         //RowMapper对象用来构建结果集为User
         User user = jdbcTemplate.queryForObject(sql, new Object[]{userId}, new RowMapper<User>() {
+            @Override
+            public User mapRow(ResultSet rs, int rowNum) throws SQLException {
+                User user = new User();
+                user.setId(rs.getInt("id"));
+                user.setUsername(rs.getString("username"));
+                user.setPassword(rs.getString("password"));
+                user.setPermission(rs.getString("permission"));
+                user.setUser_info(rs.getString("user_info"));
+                return user;
+            }
+        });
+
+        return user;
+    }
+
+    public List<User> get_name_User(String name) {
+        String sql = "select * from user where username = ?";
+        //RowMapper对象用来构建结果集为User
+        List<User> user = jdbcTemplate.query(sql, new Object[]{name}, new RowMapper<User>() {
             @Override
             public User mapRow(ResultSet rs, int rowNum) throws SQLException {
                 User user = new User();
