@@ -42,6 +42,7 @@ export default ({
                 },
                 success(resp) {
                     if(resp.error_message === "success") {
+                        localStorage.setItem("jwt_token", resp.token); // 将token存到浏览器中而不是内存中
                         context.commit("update_token", resp.token); // 登录成功更新token
                         data.success(resp); // 自定义标志函数
                     } else { // 能将信息返回给前端但是账号或密码有问题
@@ -78,8 +79,8 @@ export default ({
         },
         // 直接删除所有信息就是退出登录
         logout(context) {
+            localStorage.removeItem("jwt_token");
             context.commit("logout");
-            console.log("dawdaw" + context.state.is_login);
         }
     },
     modules: {

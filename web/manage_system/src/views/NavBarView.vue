@@ -8,10 +8,10 @@
     <div class="collapse navbar-collapse" id="navbarText">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <router-link :to="{name:'goodsinfo'}" class="nav-link active">商品信息</router-link>
+          <router-link :to="{name:'goodsinfo'}" class="nav-link">商品信息</router-link>
         </li>
         <li class="nav-item">
-          <router-link :to="{name:'userinfo'}" class="nav-link active">个人信息</router-link>
+          <router-link :to="{name:'userinfo'}" class="nav-link">个人信息</router-link>
         </li>
         <li class="nav-item">
           <router-link :to="{name:'storeinfo'}" class="nav-link">仓库信息</router-link>
@@ -65,6 +65,11 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+  .navbar-brand {
+    color:aqua;
+  }
+  .nav-link {
+    color:bisque;
+  }
 </style>

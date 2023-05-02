@@ -38,8 +38,12 @@ export default {
       let error_message = ref(''); 
 
       const login = () => {
-        error_message = "";
-        store.dispatch("login",{
+        error_message.value = "";
+        if(!username.value || !password.value) {
+          error_message.value = "用户名或密码不能为空";
+        }
+        else {
+          store.dispatch("login",{
           username: username.value,
           password: password.value,
           // 自定义错误处理函数
@@ -64,6 +68,7 @@ export default {
             console.log(resp);
           }
         });
+        }
       }
 
       return {
