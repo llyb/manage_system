@@ -7,7 +7,8 @@ export default ({
         permission: "",
         user_info: "",
         token: "",
-        is_login: false
+        is_login: false,
+        pulling_info: true
     },
     getters: {
     },
@@ -19,6 +20,11 @@ export default ({
             state.user_info = user.info;
             state.is_login = user.is_login;
         },
+        update_user1(state, user) {
+          state.username = user.username,
+          state.permission = user.permission,
+          state.user_info = user.info
+        },
         update_token(state, token) {
             state.token = token;
         },
@@ -29,6 +35,9 @@ export default ({
             state.user_info = "";
             state.token = "";
             state.is_login = false;
+        },
+        updatePullingInfo(state, pulling_info) {
+            state.pulling_info = pulling_info;
         }
     },
     actions: {
@@ -76,6 +85,36 @@ export default ({
                 data.error(resp);
             }
             });
+        },
+        update(context, data) {
+            $.ajax({
+                url: "http://localhost:3000/user/update",
+                type: "post",
+                headers: {
+                    Authorization: "Bearer " + context.state.token
+                },
+                data: {
+                    user_id: data.user_id,
+                    username: data.username,
+                    permission: data.permission,
+                    user_info: data.user_info
+                },
+                success(resp) {
+                    if(resp.error_message === "success") {
+                        // 这里只对修改的数据进行更改，防止因为异步问题导致前端的id在某刻无法获取的问题
+                        context.commit("update_user1", {
+                            username: data.username,
+                            permission: data.permission,
+                            user_info: data.user_info,
+                        });
+                        data.success(); // 重新获取前端数据
+                    }
+                    console.log(resp);
+                },
+                error(resp) {
+                    console.log(resp);
+                }
+            })
         },
         // 直接删除所有信息就是退出登录
         logout(context) {

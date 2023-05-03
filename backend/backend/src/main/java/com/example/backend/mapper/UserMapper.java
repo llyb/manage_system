@@ -25,6 +25,12 @@ public class UserMapper {
         return "add user success!";
     }
 
+    public String updateUser(int user_id, String username, String permission, String info) {
+        String sql = "update user set username = ? , permission = ? , user_info = ? where id = ?";
+        jdbcTemplate.update(sql, username, permission, info, user_id);
+        return "success";
+    }
+
     // 返回用户总数
     public String getCount() {
         String sql = "select count(*) from user";

@@ -77,31 +77,8 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  let flag = 1;
-  const jwt_token = localStorage.getItem("jwt_token");
-
-  if(jwt_token) {
-    store.commit("update_token", jwt_token); // 如果有token就进行更新
-    store.dispatch("get_info", {
-      success() {
-
-      },
-      error() {
-        alert("token无效,请重新登录");
-        router.push({name: 'login'});
-      }
-    })
-  } else {
-    flag = 2;
-  }
-
-  if(to.meta.requestAuth && !store.state.user.is_login) {
-      if(flag === 1) {
-        next();
-      } else {
-        alert("请先进行登录！");
-        next({name: 'login'});
-      }
+  if (to.meta.requestAuth && !store.state.user.is_login) {
+    next({name: "login"});
   } else {
     next();
   }

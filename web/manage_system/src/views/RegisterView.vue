@@ -68,6 +68,7 @@ export default {
         confirmedpassword,
         error_message,
         register
+        
       }
     }
 }

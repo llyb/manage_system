@@ -1,5 +1,5 @@
 <template>
-  <CardContentVue>
+  <CardContentVue v-if="!$store.state.user.pulling_info">
     <div class="container" style="width:40%">
       <div class="card">
         <div class="card-body">
@@ -35,7 +35,23 @@ export default {
       const store = useStore();
       let username = ref('');
       let password = ref('');
-      let error_message = ref(''); 
+      let error_message = ref('');
+
+      const jwt_token = localStorage.getItem("jwt_token");
+      if(jwt_token) {
+        store.commit("update_token", jwt_token);
+        store.dispatch("get_info", {
+          success() {
+            router.push({name: "goodsinfo"});
+            store.commit("updatePullingInfo", false);
+          },
+          error() {
+            store.commit("updatePullingInfo", false);
+          }
+        })
+      } else {
+        store.commit("updatePullingInfo", false);
+      }
 
       const login = () => {
         error_message.value = "";
@@ -54,7 +70,6 @@ export default {
               // 登录成功并获取信息之后跳转到商品页面
               router.push({name: "goodsinfo"});
               console.log(resp);
-              // console.log("faefwf" + store.state.user.is_login);
               },
               error(resp) {
                 error_message.value = "获取用户信息出错";

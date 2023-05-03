@@ -18,7 +18,7 @@
   import 'bootstrap/dist/js/bootstrap';
   import NavBarView from './views/NavBarView.vue';
   import { defineComponent } from "vue";
-
+  
   export default defineComponent({
     components: {
       NavBarView
