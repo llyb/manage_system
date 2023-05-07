@@ -1,4 +1,4 @@
-package com.example.backend.service.Impl;
+package com.example.backend.service.Impl.User;
 
 import com.example.backend.mapper.UserMapper;
 import com.example.backend.service.user.account.UpdateUserService;

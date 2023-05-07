@@ -25,6 +25,7 @@ public class UserMapper {
         return "add user success!";
     }
 
+    // 更新某一用户的信息
     public String updateUser(int user_id, String username, String permission, String info) {
         String sql = "update user set username = ? , permission = ? , user_info = ? where id = ?";
         jdbcTemplate.update(sql, username, permission, info, user_id);
@@ -39,10 +40,10 @@ public class UserMapper {
     }
 
     // 删除用户
-    public String deleteUser() {
-        String sql = "delete from manage.user where id = '4'";
-        jdbcTemplate.update(sql);
-        return "delete success!";
+    public String deleteUser(int id) {
+        String sql = "delete from manage.user where id = '?'";
+        jdbcTemplate.update(sql, id);
+        return "delete success";
     }
 
     // 返回所有用户
@@ -74,6 +75,7 @@ public class UserMapper {
         return user;
     }
 
+    // 通过姓名查询某一用户的信息
     public List<User> get_name_User(String name) {
         String sql = "select * from user where username = ?";
         //RowMapper对象用来构建结果集为User

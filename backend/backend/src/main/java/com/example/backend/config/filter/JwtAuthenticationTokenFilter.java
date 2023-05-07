@@ -2,7 +2,7 @@ package com.example.backend.config.filter;
 
 import com.example.backend.mapper.UserMapper;
 import com.example.backend.pojo.User;
-import com.example.backend.service.Impl.UserDetailesImpl;
+import com.example.backend.service.Impl.User.UserDetailesImpl;
 import com.example.backend.utils.JwtUtil;
 import com.sun.istack.internal.NotNull;
 import io.jsonwebtoken.Claims;
