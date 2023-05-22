@@ -10,15 +10,15 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class LogsMapper {
+public class In_LogsMapper {
     @Autowired
     private JdbcTemplate jdbcTemplate;
     // 对记录进行更新
-    public String update_info(int goods_number, int storage_id, int user_id) {
+    public String update_info(int goods_number, int storage_id, int user_id, int good_num) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = new Date(System.currentTimeMillis());
-        String sql = "insert into in_table (goods_number, storage_id, in_time, user_id) values(?, ?, ?, ?)";
-        jdbcTemplate.update(sql, goods_number, storage_id, format.format(date), user_id);
+        String sql = "insert into in_table (goods_number, storage_id, time, user_id, good_num) values(?, ?, ?, ?, ?)";
+        jdbcTemplate.update(sql, goods_number, storage_id, format.format(date), user_id, good_num);
         return "success!";
     }
     // 获取所有的数据

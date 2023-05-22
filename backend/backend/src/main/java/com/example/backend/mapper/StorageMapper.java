@@ -19,4 +19,11 @@ public class StorageMapper {
         List<Map<String, Object>> maps = jdbcTemplate.queryForList(sql);
         return maps;
     }
+
+    public String updateToStore(int s_volume, int s_id) {
+        String sql = "update storage set s_volume = s_volume - ? where s_id = ?";
+        // 执行sql语句
+        jdbcTemplate.update(sql, s_volume, s_id);
+        return "success";
+    }
 }

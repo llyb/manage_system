@@ -16,8 +16,9 @@ public class AddGoodsController {
     public String addGoods(@RequestParam Map<String,String> map) {
         int good_number = Integer.parseInt(map.get("good_number"));
         String good_name = map.get("good_name");
-        int good_price = Integer.parseInt(map.get("good_price"));
-        System.out.println(good_name + "\n" +good_price + "\n" + good_number);
-        return addGoodsService.AddGoods(good_number, good_name, good_price);
+        int good_num = Integer.parseInt(map.get("good_num"));
+        int in_storage = Integer.parseInt(map.get("in_storage"));
+        System.out.println(good_name + "\n" +good_num + "\n" + good_number + in_storage);
+        return addGoodsService.AddGoods(good_number, good_name, good_num, in_storage);
     }
 }

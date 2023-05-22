@@ -24,7 +24,10 @@
                             type="button"
                             class="btn btn-primary"
                             style="margin-right: 10px"
-                            @click="setId(good.goods_number)"
+                            @click="
+                                setId(good.goods_number);
+                                setnum(good.goods_num);
+                            "
                         >
                             修改
                         </button>
@@ -63,12 +66,16 @@
                                 <input v-model="goods_name" type="text" class="form-control" id="recipient-name" />
                             </div>
                             <div class="mb-3">
-                                <label for="recipient-name" class="col-form-label">商品价格:</label>
-                                <input v-model="goods_price" type="text" class="form-control" id="recipient-name" />
+                                <label for="recipient-name" class="col-form-label">商品个数:</label>
+                                <input v-model="goods_num" type="text" class="form-control" id="recipient-name" />
                             </div>
                             <div class="mb-3">
-                                <label for="message-text" class="col-form-label">商品编号:</label>
-                                <textarea v-model="goods_number" class="form-control" id="message-text"></textarea>
+                                <label for="recipient-name" class="col-form-label">商品编号:</label>
+                                <input v-model="goods_number" type="text" class="form-control" id="recipient-name" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="recipient-name" class="col-form-label">仓库编号:</label>
+                                <input v-model="in_storage" type="text" class="form-control" id="recipient-name" />
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -110,11 +117,15 @@
                             </div>
                             <div class="mb-3">
                                 <label for="recipient-name" class="col-form-label">商品个数:</label>
-                                <input v-model="good_price" type="text" class="form-control" id="recipient-name" />
+                                <input v-model="good_num" type="text" class="form-control" id="recipient-name" />
                             </div>
                             <div class="mb-3">
                                 <label for="message-text" class="col-form-label">商品编号:</label>
-                                <textarea v-model="good_number" class="form-control" id="message-text"></textarea>
+                                <input v-model="good_number" class="form-control" id="message-text" />
+                            </div>
+                            <div class="mb-3">
+                                <label for="message-text" class="col-form-label">仓库编号:</label>
+                                <input v-model="in_storage1" class="form-control" id="message-text" />
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -142,13 +153,17 @@ export default {
         const store = useStore();
         const goods = ref([]);
         let goods_name = ref('');
-        let goods_price = ref('');
+        let goods_num = ref('');
         let goods_number = ref('');
+        let in_storage = ref('');
         let id = ref('');
 
         let good_name = ref('');
-        let good_price = ref('');
+        let good_num = ref('');
         let good_number = ref('');
+        let in_storage1 = ref('');
+
+        let old_num = ref('');
 
         $.ajax({
             url: 'http://localhost:3000/get/goods',
@@ -169,6 +184,10 @@ export default {
             id.value = goods_number;
         };
 
+        const setnum = (goods_num) => {
+            old_num.value = goods_num;
+        };
+
         const updateGoods = () => {
             // 对商品信息进行修改
             $.ajax({
@@ -177,14 +196,90 @@ export default {
                 data: {
                     goods_number: goods_number.value,
                     goods_name: goods_name.value,
-                    goods_price: goods_price.value,
+                    goods_num: goods_num.value,
                     old_good_number: id.value,
+                    storage_id: in_storage.value,
                 },
                 headers: {
                     Authorization: 'Bearer ' + store.state.user.token,
                 },
                 success(resp) {
-                    console.log('成功更新数据' + resp);
+                    console.log('修改成功！' + resp);
+
+                    if (old_num.value > goods_num.value) {
+                        // 进行出库操作
+                        $.ajax({
+                            url: 'http://localhost:3000/update/inlogs',
+                            type: 'post',
+                            headers: {
+                                Authorization: 'Bearer ' + store.state.user.token,
+                            },
+                            data: {
+                                goods_number: goods_number.value,
+                                storage_id: in_storage.value,
+                                user_id: store.state.user.id,
+                                good_num: goods_num.value - old_num.value,
+                            },
+                            success(resp) {
+                                console.log('成功将记录进行更新！');
+                                console.log(resp);
+                            },
+                            error(resp) {
+                                console.log(resp);
+                            },
+                        });
+                        // 对仓库的体积进行更新
+                        $.ajax({
+                            url: 'http://localhost:3000/update/storage',
+                            type: 'post',
+                            headers: {
+                                Authorization: 'Bearer ' + store.state.user.token,
+                            },
+                            data: {
+                                s_volume: old_num.value - goods_num.value,
+                                s_id: in_storage.value,
+                            },
+                            success(resp) {
+                                console.log(resp);
+                            },
+                            error(resp) {
+                                console.log(resp);
+                            },
+                        });
+                    } else {
+                        $.ajax({
+                            url: 'http://localhost:3000/update/outlogs',
+                            type: 'post',
+                            headers: {
+                                Authorization: 'Bearer ' + store.state.user.token,
+                            },
+                            data: {
+                                goods_number: goods_number.value,
+                                in_storage: in_storage.value,
+                                user_id: store.state.user.id,
+                                good_num: old_num.value - goods_num.value,
+                            },
+                            success(resp) {
+                                console.log(resp);
+                            },
+                            error(resp) {
+                                console.log(resp);
+                            },
+                        });
+                        // 对仓库的体积进行更新
+                        $.ajax({
+                            url: 'http://localhost:3000/update/storage',
+                            type: 'post',
+                            headers: {
+                                Authorization: 'Bearer ' + store.state.user.token,
+                            },
+                            data: {
+                                s_volume: goods_num.value - old_num.value,
+                                s_id: in_storage.value,
+                            },
+                        });
+                    }
+
                     $.ajax({
                         url: 'http://localhost:3000/get/goods',
                         type: 'get',
@@ -253,7 +348,8 @@ export default {
                 data: {
                     good_number: good_number.value,
                     good_name: good_name.value,
-                    good_price: good_price.value,
+                    good_num: good_num.value,
+                    in_storage: in_storage1.value,
                 },
                 success(resp) {
                     $.ajax({
@@ -272,6 +368,26 @@ export default {
                             alert('获取信息出错，请重试！');
                         },
                     });
+                    $.ajax({
+                        url: 'http://localhost:3000/update/inlogs',
+                        type: 'post',
+                        headers: {
+                            Authorization: 'Bearer ' + store.state.user.token,
+                        },
+                        data: {
+                            goods_number: good_number.value,
+                            storage_id: in_storage1.value,
+                            user_id: store.state.user.id,
+                            good_num: good_num.value,
+                        },
+                        success(resp) {
+                            console.log('成功将记录进行更新！');
+                            console.log(resp);
+                        },
+                        error(resp) {
+                            console.log(resp);
+                        },
+                    });
                     console.log(resp);
                 },
                 error(resp) {
@@ -283,15 +399,18 @@ export default {
         return {
             goods,
             goods_name,
-            goods_price,
+            goods_num,
             goods_number,
             updateGoods,
             setId,
             deleteGoods,
             add_goods,
             good_name,
-            good_price,
+            good_num,
             good_number,
+            in_storage,
+            in_storage1,
+            setnum,
         };
     },
 };

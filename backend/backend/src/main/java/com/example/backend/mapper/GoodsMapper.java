@@ -21,9 +21,9 @@ public class GoodsMapper {
     }
 
     // 更新商品信息
-    public String updateGoods(int goods_number, String goods_name, int goods_price, int old_goods_number) {
-        String sql = "update goods set goods_number = ? , goods_name = ? , goods_price = ? where goods_number = ?";
-        jdbcTemplate.update(sql, goods_number, goods_name, goods_price, old_goods_number);
+    public String updateGoods(int goods_number, String goods_name, int goods_num, int in_storage,int old_goods_number) {
+        String sql = "update goods set goods_number = ? , goods_name = ? , goods_num = ?, in_storage = ? where goods_number = ?";
+        jdbcTemplate.update(sql, goods_number, goods_name, goods_num, in_storage, old_goods_number);
         return "success";
     }
 
@@ -35,9 +35,9 @@ public class GoodsMapper {
     }
 
     // 插入商品
-    public String addGoods(int goods_number, String goods_name, int goods_price) {
-        String sql = "insert into goods values(?, ?, ?)";
-        jdbcTemplate.update(sql, new Object[]{goods_number, goods_name, goods_price});
+    public String addGoods(int goods_number, String goods_name, int goods_num, int in_storage) {
+        String sql = "insert into goods values(?, ?, ?, ?)";
+        jdbcTemplate.update(sql, new Object[]{goods_number, goods_name, goods_num, in_storage});
         return "success";
     }
 }

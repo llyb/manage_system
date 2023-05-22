@@ -10,7 +10,7 @@ public class AddGoodsServiceImpl implements AddGoodsService {
     @Autowired
     private GoodsMapper goodsMapper;
     @Override
-    public String AddGoods(int goods_number, String goods_name, int goods_price) {
-        return goodsMapper.addGoods(goods_number, goods_name, goods_price);
+    public String AddGoods(int good_number, String good_name, int good_num, int in_storage) {
+        return goodsMapper.addGoods(good_number, good_name, good_num, in_storage);
     }
 }

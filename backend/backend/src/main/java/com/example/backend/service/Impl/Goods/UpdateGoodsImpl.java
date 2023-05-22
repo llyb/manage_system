@@ -12,9 +12,8 @@ public class UpdateGoodsImpl implements UpdateGoods {
     @Autowired
     private GoodsMapper goodsMapper;
     @Override
-    public String update(int goods_number, String goods_name, int goods_price, int old_good_number) {
-        Map<String,String> mp;
-        if("success".equals(goodsMapper.updateGoods(goods_number, goods_name, goods_price, old_good_number))) {
+    public String update(int goods_number, String goods_name, int goods_num, int in_storage, int old_good_number) {
+        if("success".equals(goodsMapper.updateGoods(goods_number, goods_name, goods_num, in_storage, old_good_number))) {
             return "success";
         }
         return "error";
