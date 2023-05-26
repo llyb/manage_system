@@ -16,7 +16,7 @@
                     <td>{{ user.username }}</td>
                     <td>{{ user.permission }}</td>
                     <td>{{ user.user_info }}</td>
-                    <td v-if="parseInt($store.state.user.id) === user.id">
+                    <td v-if="parseInt($store.state.user.id) === user.id && $store.state.user.permission !== '老板'">
                         <button
                             data-bs-toggle="modal"
                             data-bs-target="#exampleModal"
@@ -28,7 +28,18 @@
                             修改
                         </button>
                     </td>
-                    <td v-else></td>
+                    <td v-if="$store.state.user.permission === '老板'">
+                        <button
+                            data-bs-toggle="modal"
+                            data-bs-target="#exampleModal"
+                            data-bs-whatever="@mdo"
+                            type="button"
+                            class="btn btn-primary"
+                            style="margin-right: 10px"
+                        >
+                            修改
+                        </button>
+                    </td>
                 </tr>
             </tbody>
         </table>

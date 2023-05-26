@@ -35,7 +35,7 @@
                         <button
                             @click="
                                 setId(good.goods_number);
-                                deleteGoods();
+                                deleteGoods(good.in_storage, good.goods_num);
                             "
                             type="button"
                             class="btn btn-danger"
@@ -218,7 +218,7 @@ export default {
                                 goods_number: goods_number.value,
                                 storage_id: in_storage.value,
                                 user_id: store.state.user.id,
-                                good_num: goods_num.value - old_num.value,
+                                good_num: Math.abs(goods_num.value - old_num.value),
                             },
                             success(resp) {
                                 console.log('成功将记录进行更新！');
@@ -236,7 +236,7 @@ export default {
                                 Authorization: 'Bearer ' + store.state.user.token,
                             },
                             data: {
-                                s_volume: old_num.value - goods_num.value,
+                                s_volume: Math.abs(old_num.value - goods_num.value),
                                 s_id: in_storage.value,
                             },
                             success(resp) {
@@ -247,6 +247,7 @@ export default {
                             },
                         });
                     } else {
+                        // 更新记录
                         $.ajax({
                             url: 'http://localhost:3000/update/outlogs',
                             type: 'post',
@@ -257,7 +258,7 @@ export default {
                                 goods_number: goods_number.value,
                                 in_storage: in_storage.value,
                                 user_id: store.state.user.id,
-                                good_num: old_num.value - goods_num.value,
+                                good_num: Math.abs(old_num.value - goods_num.value),
                             },
                             success(resp) {
                                 console.log(resp);
@@ -274,7 +275,7 @@ export default {
                                 Authorization: 'Bearer ' + store.state.user.token,
                             },
                             data: {
-                                s_volume: goods_num.value - old_num.value,
+                                s_volume: Math.abs(goods_num.value - old_num.value),
                                 s_id: in_storage.value,
                             },
                         });
@@ -303,7 +304,7 @@ export default {
             });
         };
 
-        const deleteGoods = () => {
+        const deleteGoods = (in_storage, good_num) => {
             console.log(id.value);
             $.ajax({
                 url: 'http://localhost:3000/delete/goods',
@@ -316,6 +317,39 @@ export default {
                 },
                 success(resp) {
                     console.log('删除成功' + resp);
+                    // 更新出库记录
+                    $.ajax({
+                        url: 'http://localhost:3000/update/outlogs',
+                        type: 'post',
+                        headers: {
+                            Authorization: 'Bearer ' + store.state.user.token,
+                        },
+                        data: {
+                            goods_number: id.value,
+                            in_storage: in_storage,
+                            user_id: store.state.user.id,
+                            good_num: good_num,
+                        },
+                        success(resp) {
+                            console.log(resp);
+                        },
+                        error(resp) {
+                            console.log(resp);
+                        },
+                    });
+                    // 对仓库的体积进行更新
+                    $.ajax({
+                        url: 'http://localhost:3000/update/storage',
+                        type: 'post',
+                        headers: {
+                            Authorization: 'Bearer ' + store.state.user.token,
+                        },
+                        data: {
+                            s_volume: good_num,
+                            s_id: in_storage.value,
+                        },
+                    });
+                    // 重新获取商品信息
                     $.ajax({
                         url: 'http://localhost:3000/get/goods',
                         type: 'get',
@@ -382,6 +416,24 @@ export default {
                         },
                         success(resp) {
                             console.log('成功将记录进行更新！');
+                            console.log(resp);
+                        },
+                        error(resp) {
+                            console.log(resp);
+                        },
+                    });
+                    // 对仓库的体积进行更新
+                    $.ajax({
+                        url: 'http://localhost:3000/update/storage',
+                        type: 'post',
+                        headers: {
+                            Authorization: 'Bearer ' + store.state.user.token,
+                        },
+                        data: {
+                            s_volume: good_num.value,
+                            s_id: in_storage1.value,
+                        },
+                        success(resp) {
                             console.log(resp);
                         },
                         error(resp) {
