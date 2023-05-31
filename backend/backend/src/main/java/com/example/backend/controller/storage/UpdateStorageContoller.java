@@ -17,6 +17,7 @@ public class UpdateStorageContoller {
     public String updateToStore(@RequestParam Map<String,String> mp) {
         int s_volume = Integer.parseInt(mp.get("s_volume"));
         int s_id = Integer.parseInt(mp.get("s_id"));
+        System.out.println("aaaaaaaaaaaaaaaaaaa" + "s_volume" + s_volume + " " + "s_id" + s_id);
         return updateStorService.updateToStorage(s_volume, s_id);
     }
 }

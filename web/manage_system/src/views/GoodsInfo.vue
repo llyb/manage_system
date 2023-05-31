@@ -345,8 +345,8 @@ export default {
                             Authorization: 'Bearer ' + store.state.user.token,
                         },
                         data: {
-                            s_volume: good_num,
-                            s_id: in_storage.value,
+                            s_volume: '-' + good_num,
+                            s_id: in_storage,
                         },
                     });
                     // 重新获取商品信息

@@ -14,13 +14,11 @@ public class UpdateGoodsControlelr {
     private UpdateGoods updateGoods;
     @PostMapping("/update/goods")
     public String Updategoods(@RequestParam Map<String,String> mp) {
-        System.out.println(mp);
         int goods_number = Integer.parseInt(mp.get("goods_number"));
         String goods_name = mp.get("goods_name");
         int goods_num = Integer.parseInt(mp.get("goods_num"));
         int old_good_number = Integer.parseInt(mp.get("old_good_number"));
         int in_storage = Integer.parseInt(mp.get("storage_id"));
-        System.out.println(goods_number + "\n" + goods_name + "\n" + goods_num + "\n" + old_good_number + "\n" + in_storage);
         return updateGoods.update(goods_number, goods_name, goods_num, in_storage, old_good_number);
     }
 }

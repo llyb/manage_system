@@ -20,7 +20,6 @@ public class UpdateInLogsController {
         int storage_id = Integer.parseInt(map.get("storage_id"));
         int user_id = Integer.parseInt(map.get("user_id"));
         int good_num = Integer.parseInt(map.get("good_num"));
-        System.out.println("good_num的值是" + good_num);
         return updateLogsService.update_info(goods_number, storage_id, user_id, good_num);
     }
 }

@@ -20,7 +20,6 @@ public class UpdateOutLogsController {
         int storage_id = Integer.parseInt(map.get("in_storage"));
         int user_id = Integer.parseInt(map.get("user_id"));
         int good_num = Integer.parseInt(map.get("good_num"));
-        System.out.println(goods_number + " " + storage_id + " " + user_id);
         return updateLogsService.update_info(goods_number, storage_id, user_id, good_num);
     }
 }
